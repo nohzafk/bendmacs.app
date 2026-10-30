@@ -309,7 +309,7 @@ esac
         digest = marker.split("patchset=", 1)[1].split("\n", 1)[0]
         self.assertRegex(digest, r"^[0-9a-f]{64}$")
         self.assertTrue(notes.startswith("Emacs 31.1 for macOS on Apple silicon: "
-                                         "build 5 of bendmacs-emacs.\n"), notes)
+                                         "build 5 of bendmacs.app.\n"), notes)
         self.assertIn(f"`{PIN}`", notes)
         self.assertIn(f"`patchset={digest}`", notes)
         lock = (ROOT / "patches/ui-patches.lock").read_text().splitlines()

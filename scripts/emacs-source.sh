@@ -34,7 +34,7 @@ emacs_source_error() {
 
 emacs_validate_source() {
   local src="$1" actual origin
-  # Require a separate repository: never accept the surrounding bendmacs-emacs .git.
+  # Require a separate repository: never accept the surrounding bendmacs.app .git.
   [[ -d "$src/.git" ]] || { emacs_source_error "$src has no own .git"; return 1; }
   actual="$(git -C "$src" rev-parse --verify HEAD)" || return 1
   [[ "$actual" == "$EMACS_SOURCE_REVISION" ]] || {

@@ -1,30 +1,33 @@
-[![MacOS Build for GNU Emacs](https://github.com/nohzafk/bendmacs-emacs/actions/workflows/build.yml/badge.svg)](https://github.com/nohzafk/bendmacs-emacs/actions/workflows/build.yml)
+[![MacOS Build for GNU Emacs](https://github.com/nohzafk/bendmacs.app/actions/workflows/build.yml/badge.svg)](https://github.com/nohzafk/bendmacs.app/actions/workflows/build.yml)
 
-# bendmacs-emacs
+# bendmacs.app
 
-This repository builds the `Emacs.app` that bendmacs runs on: GNU Emacs
-31.1 for macOS on Apple silicon, built from the release commit (pinned by
-its full SHA, not by tag), with its dependencies linked statically, the
-emacs-plus UI patches, local patches to Emacs's xwidget support and to
-child-frame resizing, and the RysMono Nerd Font Mono font the bendmacs
-config uses.
+GNU Emacs 31.1 as a self-contained `Emacs.app` for Apple-silicon Macs.
+Every library Emacs uses is compiled from source and linked statically
+into the app; only macOS's own frameworks are loaded from the system. The
+app needs no Homebrew or Nix, and upgrading or removing them cannot break
+it. On top of stock Emacs it carries the emacs-plus UI patches and local
+patches that let a dynamic module show its own GPU-drawn views inside
+buffers and child frames.
 
-bendmacs draws parts of its interface inside Emacs buffers and child frames
-with views that are not text: views that a dynamic module draws with the
-GPU. Stock Emacs places, clips and hides only WebKit views; on macOS it
-leaves every xwidget view behind when a window scrolls by copying rows;
-and a chrome-less child frame that grows shows its new area black for a
-moment. Three local patches add a `native` xwidget type whose `NSView` a
-dynamic module supplies, make xwidget views follow scrolling as they do
-on X, and grow such a child frame in two steps. Why each patch is shaped
-the way it is, and what it leaves alone, is in
+What it adds to stock Emacs:
+
+- **emacs-plus UI patches**: system dark/light appearance, rounded
+  undecorated frames, the full colour list.
+- **Native xwidgets**: a `native` xwidget type whose `NSView` a dynamic
+  module supplies, placed, clipped and hidden like a WebKit view; views
+  that follow scrolling; child frames that grow without a black band.
+- **Fixes**: a scroll crash (bug#81585) and `delete-frame` stealing focus.
+- **RysMono Nerd Font Mono**, bundled for this app only.
+
+Each patch is described under [The patch set](#the-patch-set); why the
+local ones are shaped as they are is in
 [docs/local-patches.md](docs/local-patches.md).
 
 This repository is the application only: the source pin, the patches, the
-font, the build and the release. The bendmacs config, its widgets and
-their design records (how a widget is hosted, what it draws, how it is
-measured) are in [bendmacs](https://github.com/nohzafk/bendmacs). A
-change belongs here when it needs a different `Emacs.app`.
+font, the build and the release. The config that runs on it is
+[bendmacs](https://github.com/nohzafk/bendmacs). A change belongs here
+when it needs a different `Emacs.app`.
 
 ## What a release contains
 
@@ -61,11 +64,11 @@ patches (`patchset=321c4e22…`); `v30.2` is the last Emacs 30 build.
 Download the asset and its digest, and check one against the other:
 
 ```bash
-curl -fLO https://github.com/nohzafk/bendmacs-emacs/releases/download/emacs-31.1-bendmacs.5/Emacs-31.1-bendmacs.5.tar.xz
+curl -fLO https://github.com/nohzafk/bendmacs.app/releases/download/emacs-31.1-bendmacs.5/Emacs-31.1-bendmacs.5.tar.xz
 ```
 
 ```bash
-curl -fLO https://github.com/nohzafk/bendmacs-emacs/releases/download/emacs-31.1-bendmacs.5/Emacs-31.1-bendmacs.5.tar.xz.sha256
+curl -fLO https://github.com/nohzafk/bendmacs.app/releases/download/emacs-31.1-bendmacs.5/Emacs-31.1-bendmacs.5.tar.xz.sha256
 ```
 
 ```bash
@@ -355,7 +358,8 @@ build number instead. The app bundle is always `Emacs.app`.
 This repository was forked from
 [RadioNoiseE/ebuild](https://github.com/RadioNoiseE/ebuild) and renamed
 bendmacs-emacs, because the name collided with Gentoo's ebuild and said
-nothing of what the repository now is. The bundle's marker files
+nothing of what the repository now is, then bendmacs.app, after the
+artifact it builds. The bundle's marker files
 (`ebuild-*.txt`) and the scripts' `EBUILD_*` variables keep the old name:
 the markers are inside bundles already published, and the variables are
 identifiers only.

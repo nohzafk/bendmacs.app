@@ -18,14 +18,17 @@ What it adds to stock Emacs:
   module supplies, placed, clipped and hidden like a WebKit view; views
   that follow scrolling; child frames that grow without a black band.
 - **Fixes**: a scroll crash (bug#81585) and `delete-frame` stealing focus.
-- **RysMono Nerd Font Mono**, bundled for this app only.
+
+It bundles no font: use any installed font. bendmacs installs
+[RysMono](https://github.com/nohzafk/rysmono), which builds 4 and 5 of this
+app carried inside the bundle.
 
 Each patch is described under [The patch set](#the-patch-set); why the
 local ones are shaped as they are is in
 [docs/local-patches.md](docs/local-patches.md).
 
 This repository is the application only: the source pin, the patches, the
-font, the build and the release. The config that runs on it is
+build and the release. The config that runs on it is
 [bendmacs](https://github.com/nohzafk/bendmacs). A change belongs here
 when it needs a different `Emacs.app`.
 
@@ -37,10 +40,10 @@ and this repository's build number, and never moves:
 
 | | |
 |---|---|
-| Tag | `emacs-31.1-bendmacs.5` |
-| Title | Emacs 31.1, bendmacs build 5 |
-| Asset | `Emacs-31.1-bendmacs.5.tar.xz`, a tarball holding `Emacs.app` |
-| Digest | `Emacs-31.1-bendmacs.5.tar.xz.sha256`, beside the asset |
+| Tag | `emacs-31.1-bendmacs.6` |
+| Title | Emacs 31.1, bendmacs build 6 |
+| Asset | `Emacs-31.1-bendmacs.6.tar.xz`, a tarball holding `Emacs.app` |
+| Digest | `Emacs-31.1-bendmacs.6.tar.xz.sha256`, beside the asset |
 
 The build number is `EMACS_BUILD_NUMBER` in `scripts/emacs-source.lock`.
 Bump it by hand whenever the patch set, the configure arguments or a
@@ -64,19 +67,19 @@ patches (`patchset=321c4e22…`); `v30.2` is the last Emacs 30 build.
 Download the asset and its digest, and check one against the other:
 
 ```bash
-curl -fLO https://github.com/nohzafk/bendmacs.app/releases/download/emacs-31.1-bendmacs.5/Emacs-31.1-bendmacs.5.tar.xz
+curl -fLO https://github.com/nohzafk/bendmacs.app/releases/download/emacs-31.1-bendmacs.6/Emacs-31.1-bendmacs.6.tar.xz
 ```
 
 ```bash
-curl -fLO https://github.com/nohzafk/bendmacs.app/releases/download/emacs-31.1-bendmacs.5/Emacs-31.1-bendmacs.5.tar.xz.sha256
+curl -fLO https://github.com/nohzafk/bendmacs.app/releases/download/emacs-31.1-bendmacs.6/Emacs-31.1-bendmacs.6.tar.xz.sha256
 ```
 
 ```bash
-shasum -a 256 -c Emacs-31.1-bendmacs.5.tar.xz.sha256
+shasum -a 256 -c Emacs-31.1-bendmacs.6.tar.xz.sha256
 ```
 
 ```bash
-tar -xJf Emacs-31.1-bendmacs.5.tar.xz
+tar -xJf Emacs-31.1-bendmacs.6.tar.xz
 ```
 
 The bundle carries three provenance markers in `Emacs.app/Contents/Resources/`:
@@ -107,48 +110,6 @@ attributes:
 ```bash
 ditto Emacs.app /Applications/Emacs.app
 ```
-
-## The bundled font
-
-The app carries RysMono Nerd Font Mono in ten faces (Regular, Italic, Medium,
-MediumItalic, SemiBold, SemiBoldItalic, Bold, BoldItalic, ExtraBold,
-ExtraBoldItalic), so the bendmacs config works without a system font install.
-The fonts sit in `Emacs.app/Contents/Resources/Fonts/` beside `OFL.txt`, the
-font's license, and `Info.plist` sets `ATSApplicationFontsPath` to `Fonts/`.
-They are loaded for this app only; nothing is installed system-wide.
-
-`scripts/emacs-font.sh` builds them from [Rysana Type](https://github.com/rysana-os/type)
-1.0.0 (`rysana-type.zip`), less its Hangul, with Nerd Fonts `font-patcher` 3.5.1. Both inputs are
-pinned by version and SHA-256 in `scripts/emacs-font.lock`. The local build
-and CI run the same code, and it runs before the bundle is signed. The patcher
-runs under `fontforge`: put it on `PATH` (for example `brew install fontforge`)
-or point `EMACS_FONT_FONTFORGE` at it.
-
-- The patched font is not called Rysana. "Rysana" is a Reserved Font Name in
-  the OFL, so a modified font may not carry it: every name record except the
-  copyright and license ones says "Rys" instead, and the files are
-  `RysMono-<Face>.ttf`. `post.isFixedPitch` is set back to 1, because the
-  patcher clears it.
-- Hangul is removed before patching (`scripts/emacs-font-subset.py`): the
-  codepoints Emacs 31.1's `char-script-table` gives the `hangul` script,
-  11,223 of the font's 29,383 glyphs and a quarter of each file. bendmacs
-  draws that script with its CJK font, so the mono font's Hangul was never
-  shown. The Nerd Fonts glyphs stay.
-- Flags: `--complete --single-width-glyphs --careful --cell 0:600:-300:1010`.
-  Not `--mono`: it would squash the font's own two-cell glyphs (fractions,
-  arrows) into one cell. The cell is forced because the patcher would
-  otherwise guess it from the font's advances (with Hangul in the font the
-  most common was 1200) and icons could come out two cells wide; 600 is the
-  Latin advance.
-  `--careful` keeps Rysana's own powerline glyphs.
-- bendmacs lays out diagram text assuming these advances: 600/1000 em for a
-  narrow glyph and 1200/1000 em for a wide one. A change to the cell width
-  breaks that layout, so coordinate it with bendmacs.
-- A change to the font, the patcher or the flags changes the bundle, so it
-  needs a new `EMACS_BUILD_NUMBER`. A reused local `Emacs.app` without the
-  fonts is refused.
-- The release notes list the font version, the digest of the zip and the
-  patcher version.
 
 ## The patch set
 
@@ -242,7 +203,6 @@ env -u BASH_ENV python3 tests/test_source_pin.py
 env -u BASH_ENV python3 tests/test_ui_patches.py
 env -u BASH_ENV python3 tests/test_configure_policy.py
 env -u BASH_ENV python3 tests/test_bundle_sign.py
-env -u BASH_ENV python3 tests/test_font_bundle.py
 ```
 
 `BASH_ENV` is unset because every bash the tests start would source it,

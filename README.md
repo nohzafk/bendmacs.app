@@ -326,3 +326,11 @@ artifact it builds. The bundle's marker files
 (`ebuild-*.txt`) and the scripts' `EBUILD_*` variables keep the old name:
 the markers are inside bundles already published, and the variables are
 identifiers only.
+
+## License
+
+GNU GPL version 3 or later, see [LICENSE](LICENSE): the patches are
+derivative works of GNU Emacs, and so is the `Emacs.app` each release
+publishes. The complete corresponding source of a release is the pinned
+commit named in `scripts/emacs-source.lock` plus the patch set under
+`patches/`, both recorded in the bundle's provenance markers.

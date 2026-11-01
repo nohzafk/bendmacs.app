@@ -28,9 +28,12 @@ local ones are shaped as they are is in
 [docs/local-patches.md](docs/local-patches.md).
 
 This repository is the application only: the source pin, the patches, the
-build and the release. The config that runs on it is
-[bendmacs](https://github.com/nohzafk/bendmacs). A change belongs here
-when it needs a different `Emacs.app`.
+build and the release. It is one of four repositories around the
+[bendcord](https://github.com/nohzafk/bendcord) agent: the config that runs
+on this Emacs is [bendmacs](https://github.com/nohzafk/bendmacs), which
+loads the [bendcord.el](https://github.com/nohzafk/bendcord.el) client of
+the bendcord daemon. A change belongs here when it needs a different
+`Emacs.app`; the native widgets that use the patches live in bendmacs.
 
 ## What a release contains
 
@@ -273,7 +276,7 @@ errors in terminal mode.
 - Commit: `a360712c9d272d950d8d8255ef74570f7e90b7d9`
 - Release: `emacs-31.1` (the upstream annotated tag points at this commit)
 - Label: `31-snapshot-a360712c9d272d950d8d8255ef74570f7e90b7d9`
-- Build number: `5`
+- Build number: `6`
 
 The shared helper fetches only this full commit SHA into a detached Git checkout.
 It does not follow `master`, an Emacs 31 branch, or the release tag itself: the

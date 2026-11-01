@@ -20,8 +20,7 @@ What it adds to stock Emacs:
 - **Fixes**: a scroll crash (bug#81585) and `delete-frame` stealing focus.
 
 It bundles no font: use any installed font. bendmacs installs
-[RysMono](https://github.com/nohzafk/rysmono), which builds 4 and 5 of this
-app carried inside the bundle.
+[RysMono](https://github.com/nohzafk/rysmono).
 
 Each patch is described under [The patch set](#the-patch-set); why the
 local ones are shaped as they are is in
@@ -59,11 +58,6 @@ keeps meaning one set of bytes.
 The release notes list the source revision, the digest of the patch set,
 and the patches in the order they were applied, so what a build contains
 can be read without downloading it.
-
-Releases made before this scheme are kept as they were. `emacs-31.1`
-(asset `Emacs-31-snapshot-a360712c9d272d950d8d8255ef74570f7e90b7d9.tar.xz`,
-no digest file) was built from the patch set below without the two xwidget
-patches (`patchset=321c4e22…`); `v30.2` is the last Emacs 30 build.
 
 ### Verify and install
 
